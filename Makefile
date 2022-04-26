@@ -24,3 +24,7 @@ tests: unit-test integration-test
 
 requirements.txt:
 	poetry export -f requirements.txt --output requirements.txt --dev
+
+.PHONE: juptyer-lab
+juptyer-lab:
+	poetry run jupyter lab --allow-root

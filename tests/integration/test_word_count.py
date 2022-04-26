@@ -19,7 +19,7 @@ def _get_file_paths(input_file_lines: List[str]) -> Tuple[str, str]:
     return input_text_path, output_path
 
 
-@pytest.mark.skip
+# @pytest.mark.skip
 def test_should_tokenize_words_and_count_them() -> None:
     lines = [
         "In my younger and more vulnerable years my father gave me some advice that I've been "
@@ -260,5 +260,10 @@ def test_should_tokenize_words_and_count_them() -> None:
         ["younger", 1],
     ]
     expected = SPARK.createDataFrame(expected_data, ["word", "count"])
+
+    # TODO: Remove this. 
+    # Write CSV to disk for more granular insepction
+    # expected.coalesce(1).write.csv("./output/expected_word_count")
+    # actual.coalesce(1).write.csv("./output/actual_word_count")
 
     assert actual.collect() == expected.collect()
