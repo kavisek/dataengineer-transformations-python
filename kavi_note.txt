@@ -1,0 +1,8 @@
+# Running Job within Container
+
+export JOB=jobs/citibike_ingest.py
+export JOB=jobs/word_count.py
+
+Change the input data wath within the job-run script.
+
+Run job with ./scripts/run-job.sh

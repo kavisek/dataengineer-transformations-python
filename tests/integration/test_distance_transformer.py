@@ -92,11 +92,13 @@ def test_should_maintain_all_data_it_reads() -> None:
     expected_columns = set(given_dataframe.columns)
     expected_schema = set(given_dataframe.schema)
 
-    assert expected_columns == actual_columns
+    # TODO: Remove the first assert statement after implementing distance formula
+    # FIX: Removed assert statement since exepeceted dataframe has the additinoal "distance" column
+    # assert expected_columns == actual_columns
     assert expected_schema.issubset(actual_schema)
 
 
-@pytest.mark.skip
+# @pytest.mark.skip
 def test_should_add_distance_column_with_calculated_distance() -> None:
     given_ingest_folder, given_transform_folder = __create_ingest_and_transform_folders()
     distance_transformer.run(SPARK, given_ingest_folder, given_transform_folder)
@@ -112,6 +114,15 @@ def test_should_add_distance_column_with_calculated_distance() -> None:
     )
     expected_distance_schema = StructField('distance', DoubleType(), nullable=True)
     actual_distance_schema = actual_dataframe.schema['distance']
+
+    # FIX: Coalesce dataframe and sort before comparing.
+    actual_dataframe = actual_dataframe.coalesce(1).sort('starttime', ascending=False)
+    expected_dataframe = expected_dataframe.coalesce(1).sort('starttime', ascending=False)
+
+    # TODO: Remove this. 
+    # Write CSV to disk to validate/resolve sorting issue in test data.
+    # expected_dataframe.coalesce(1).write.csv("./output/expected_cite_bike")
+    # actual_dataframe.coalesce(1).write.csv("./output/actual_cite_bike")
 
     assert expected_distance_schema == actual_distance_schema
     assert expected_dataframe.collect() == actual_dataframe.collect()
